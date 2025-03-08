@@ -25,7 +25,7 @@ function sensorClick(){
 
 function createPopUp(parent){
     let p = document.getElementById("popup");
-    
+
     if(p){
         p.parentNode.removeChild(p);
     }
@@ -63,17 +63,17 @@ function baseOnLoad(){
         sensor.onclick = sensorClick;
 
         let parent = document.getElementsByClassName("map")[0];
-        parent.appendChild;
+        parent.appendChild(sensor);
     }
 }
 
 function startDrag(e){
     timeDelta = Date.now();
-
+    
     if(!e) var e = window.event;
-
+    
     if(e.preventDefault) e.preventDefault();
-
+    
     targ = e.target ? e.target : e.srcElement;
 
     originalX = targ.style.left;
@@ -81,8 +81,8 @@ function startDrag(e){
 
     if(!targ.classList.contains('dragme')) return;
 
-    offsextX = e.clientX;
-    offsextY = e.clientY;
+    offsetX = e.clientX;
+    offsetY = e.clientY;
     coordX = parseInt(targ.style.left);
     coordY = parseInt(targ.style.top);
     drag = true;
@@ -95,6 +95,26 @@ function dragDiv(){
     if(!drag) return;
     if(!e) var e = window.event;
 
-    let newLeft = coordX + e.clientX - offsextX;
+    let newLeft = coordX + e.clientX - offsetX;
+    if(newLeft < maxLeft && newLeft > minLeft) targ.style.left = newLeft + 'px';
     
+    let newTop = coordY + e.clientY - offsetY;
+    if(newTop < maxTop && newTop > minTop) targ.style.top = newTop + 'px';
+    return false;
+}
+
+function stopDrag(){
+    if (typeof drag == 'undefined') return;
+    if(drag){
+        if(Date.now() - timeDelta > 150){
+            let p = document.getElementById("popup");
+            if(p){
+                p.parentNode.removeChild(p);
+            }
+        }else{
+            targ.style.left = originalX;
+            targ.style.top = originalY;
+        }
+    }
+    drag = false;
 }
